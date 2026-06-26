@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
 
+const API_URL = 'https://autogram-lovat.vercel.app';
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -9,13 +11,18 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       const userInfo = localStorage.getItem('autogram_user');
+
       if (userInfo) {
         const parsed = JSON.parse(userInfo);
         setUser(parsed);
+
         try {
-          const res = await fetch('http://localhost:5000/api/auth/me', {
-            headers: { 'Authorization': `Bearer ${parsed.token}` }
+          const res = await fetch(`${API_URL}/api/auth/me`, {
+            headers: {
+              Authorization: `Bearer ${parsed.token}`
+            }
           });
+
           if (res.ok) {
             const data = await res.json();
             const updatedUser = { ...data, token: parsed.token };
@@ -23,27 +30,31 @@ export const AuthProvider = ({ children }) => {
             setUser(updatedUser);
           }
         } catch (err) {
-          console.error('Failed to verify session');
+          console.error('Failed to verify session', err);
         }
       }
+
       setLoading(false);
     };
+
     fetchUser();
   }, []);
 
   const login = async (email, password) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
+
       const data = await res.json();
-      
+
       if (!res.ok) throw new Error(data.message || 'Login failed');
-      
+
       localStorage.setItem('autogram_user', JSON.stringify(data));
       setUser(data);
+
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
@@ -52,17 +63,19 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (name, email, password) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/signup', {
+      const res = await fetch(`${API_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
       });
+
       const data = await res.json();
-      
+
       if (!res.ok) throw new Error(data.message || 'Signup failed');
-      
+
       localStorage.setItem('autogram_user', JSON.stringify(data));
       setUser(data);
+
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
