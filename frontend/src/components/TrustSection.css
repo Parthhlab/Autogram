@@ -1,0 +1,29 @@
+.trust-section {
+  padding: 60px 0;
+  border-top: 1px solid var(--border-glass);
+  border-bottom: 1px solid var(--border-glass);
+  background: rgba(11, 15, 25, 0.5);
+  position: relative;
+}
+
+.trust-subtitle {
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.stat-card {
+  padding: 30px 20px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
